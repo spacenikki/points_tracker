@@ -1,0 +1,126 @@
+<!-- <h1>Tracker#index</h1>
+<p>Find me in app/views/tracker/index.html.erb</p>
+ -->
+<!-- <a href="/users/sign_out" data-method="delete">Log out</a> -->
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Effects - Toggle Demo</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+</head>
+<style type="text/css">
+  #toggle {
+    width: 800px;
+    float:left;
+    padding:8px;
+    margin:16px;
+    /*border:1px solid red;*/
+    background-color: lightgrey;
+    color:white;
+  }
+
+</style>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#toggle').hide() // div is hidden by default
+
+    $('#add_toogle').click(function(e){
+      $('#toggle').slideToggle('slow');
+      e.preventDefault();
+      // return false;
+    });
+});
+
+</script>
+<body>
+
+<%#= @url %>
+<h4 class='success'><%= flash[:success] %></h4>
+<h3><%= @welcome_msg %></h3>
+
+<button id='add_toogle' class='btn btn-default'>Add Frequent Flyer Points Now!</button>
+
+<div id="toggle">
+  <form id='add_ff_form' action="/tracker/adding_ff_now" method='post'>
+    <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+    <input type="hidden" name='ff[user_id]' value='<%= current_user.id %>'>
+    <!-- <input type="hidden" name='ff[points]' >  <!-value='0' --> 
+    <h3>Which airline do you want us to track for you?</h3>
+    <select id='select' name="ff[airline]" >
+      <!-- in php, codelignter, we use id, rails, we use name -->
+      <option value="united">United Airline</option>
+      <option value="american">American Airline</option>
+      <!-- <option value="alaska">Alaska Airline</option> -->
+      <!-- <option value="british">British Airways</option> -->
+      <option value="southwest">Southwest Airline</option>
+    </select>
+
+    <h3>Your Frequent flyer No.</h3>
+    <input type="text" name='ff[ff_no]'/>
+    
+    <h3>Your password to this account</h3>
+    <input type="text" name='ff[password]'/>
+    <br>
+    <button id='save' type='submit' class='btn btn-success'>Submit</button>
+  </form>
+
+  <button id='see_summary' class='btn btn-warning'><a href="/tracker">Go back to see summary</a></button>
+
+</div>
+
+<div class="clearfix"></div> <!-- this is needed with toogle -->
+<!-- print all details from model ff, add an icon "get mileage update now!" for each one...  -->
+<%#= @summary.inspect %> <!-- in an array, need to print w/ .each  -->
+<h4>Summary - Points Tracker</h4>
+<table class='table'>
+    <thead>
+        <tr>
+          <th>Airline</th>
+          <th>Frequent Flyer No.</th>
+          <th>Mileage</th>
+          <th>Last Updated</th>
+          <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+    	<% @summary.reverse_each do |detail| %>
+        <tr>
+            <!-- <td><%= detail.id %></td>  debug only -->
+            <td><%= detail.airline %></td>
+            <td><%= detail.ff_no %></td>
+            <td><%= detail.points %></td>
+            <!-- <td><%# if (flash[:m_error])%> -->
+                  <%#= flash[:m_error] %>
+                  <%# else %>
+                  <%#= detail.points %>
+                <!-- <%# end %></td> -->
+            <td><%= detail.updated_at.strftime "%F %H:%M " %></td>
+
+<!-- both works, one is post another is get -->
+<!-- for form, normally, u hide id as input within the form, id would not be be included like this... "/tracker/get_mileage/<%= detail.id %>"  -->
+
+            <form action="/tracker/get_mileage/<%= detail.id %>" method='post' >
+            	<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+	            <td><button id='see_summary' class='btn btn-success'>Get Mileage Update!</button></td>
+      			</form>
+
+           <td><button id='destroy' class='btn btn-warning'><a href="/tracker/destroy/<%= detail.id %>">Delete</a></button></td>
+            
+            </form>
+        </tr>
+		<% end %>
+    </tbody>
+</table>
+
+<!--<button class='btn btn-default'><a href="/tracker/add_ff">Add Frequent Flyer Points Now!</a></button> -->
+
+
+</body>
+
+
+
+
+
+

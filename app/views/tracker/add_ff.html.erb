@@ -1,0 +1,29 @@
+
+<!-- <%#= current_user.inspect %> for debugging -->
+<div id="toggle">
+	<form id='add_ff_form' action="/tracker/adding_ff_now" method='post'>
+		<input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+		<input type="hidden" name='ff[user_id]' value='<%= current_user.id %>'>
+		<!-- <input type="hidden" name='ff[points]' >  <!-value='0' --> 
+		<h3>Which airline do you want us to track for you?</h3>
+		<select name="ff[airline]" >
+			<!-- in php, codelignter, we use id, rails, we use name -->
+			<option value="united">United Airline</option>
+			<option value="american">American Airline</option>
+			<!-- <option value="alaska">Alaska Airline</option> -->
+			<!-- <option value="british">British Airways</option> -->
+			<option value="southwest">Southwest Airline</option>
+		</select>
+
+		<h3>Your Frequent flyer No.</h3>
+		<input type="text" name='ff[ff_no]'/>
+		
+		<h3>Your password to this account</h3>
+		<input type="text" name='ff[password]'/>
+		<br>
+		<button id='save' type='submit' class='btn btn-success'>Submit</button>
+	</form>
+
+	<button id='see_summary' class='btn btn-warning'><a href="/tracker">Go back to see summary</a></button>
+
+</div>
